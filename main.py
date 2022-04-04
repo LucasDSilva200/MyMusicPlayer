@@ -1,7 +1,4 @@
-from cProfile import label
-from cgitb import text
 from tkinter import *
-import PySimpleGUI as sg
 
 #importando o pillow
 from PIL import Image,ImageTk
@@ -11,7 +8,7 @@ import pygame
 from pygame import mixer
 
 import os
-
+import random
 
 co0 = "#f0f3f5"  # Preta
 co1 = "#feffff"  # branca
@@ -25,19 +22,19 @@ co5 = "#4a88e8"  # Azul
 
 janela = Tk()
 janela.title("MySound")
-janela.geometry('352x255')
+janela.geometry('372x255')
 janela.configure(background=co1)
 janela.resizable(width=FALSE,height=FALSE)
 
 
-frame_esquerda = Frame(janela,width=150,height=150,bg=co3)
+frame_esquerda = Frame(janela,width=170,height=150,bg=co3)
 frame_esquerda.grid(row=0,column=0,pady=1,padx=1,sticky=NSEW)
 
-frame_direita = Frame(janela,width=250,height=150,bg=co3)
+frame_direita = Frame(janela,width=270,height=150,bg=co3)
 frame_direita.grid(row=0,column=1,pady=1,padx=0,sticky=NSEW)
 
 
-frame_baixo = Frame(janela,width=403,height=100,bg=co3)
+frame_baixo = Frame(janela,width=423,height=100,bg=co3)
 frame_baixo.grid(row=1,column=0,columnspan=3,pady=1,padx=0,sticky=NSEW)
 
 #configurando o frame do lado esquerdo
@@ -65,7 +62,25 @@ def previous_music():
     listbox.config(selectmode=SINGLE)
     l_rodando['text'] = tocando
     
+#Randomizando as musicas
+def random_music():
+    r = random.choice(musicas)
+    novo_index = musicas.index(r)
 
+    tocando = musicas[novo_index]
+    
+    mixer.music.load(tocando)
+    mixer.music.play()
+
+    #deletando os elementos na playlist
+    listbox.delete(0,END)
+
+    mostrar()
+
+    listbox.select_set(novo_index)
+    listbox.config(selectmode=SINGLE)
+    l_rodando['text'] = tocando
+    
 #Proxima Musica
 def next_music():
     tocando = l_rodando['text'] 
@@ -168,6 +183,12 @@ img_7 = img_7.resize((30,30))
 img_7 = ImageTk.PhotoImage(img_7)
 b_stop = Button(frame_baixo,command=stop_music,width=40,height=40,image=img_7,font=('ivy 10 bold'),relief=RAISED,overrelief=RIDGE, bg=co3,fg=co1)
 b_stop.place(x=268,y=35)
+
+img_8 = Image.open('res/8.png')
+img_8 = img_8.resize((30,30))
+img_8 = ImageTk.PhotoImage(img_8)
+b_random = Button(frame_baixo,command=random_music,width=40,height=40,image=img_8,font=('ivy 10 bold'),relief=RAISED,overrelief=RIDGE, bg=co3,fg=co1)
+b_random.place(x=314,y=35)
 
 
 os.chdir(r'C:/Users/lucas/OneDrive/Documentos/Musicas')
